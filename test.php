@@ -6,11 +6,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['imagen'])) {
     $tamanoImagen = $_FILES['imagen']['size'];
     $tempImagen = $_FILES['imagen']['tmp_name'];
 
-    // Verificar si la imagen es válida
+    //verify if the file is an image
     if($tipoImagen == "image/jpeg" || $tipoImagen == "image/png") {
-        // Guardar la imagen en la base de datos
+        // save the image on db
         $query = "INSERT INTO imagenes (nombre, tipo, tamano, imagen) VALUES (?, ?, ?, ?)";
-        $statement = $conexion->prepare($query);
+        $statement = $conn->prepare($query);
         $statement->bind_param("ssis", $nombreImagen, $tipoImagen, $tamanoImagen, $tempImagen);
         $statement->execute();
         $statement->close();
@@ -21,4 +21,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['imagen'])) {
     }
 }
 ?>
-?>
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="imagen" accept="image/jpeg, image/png" required>
+    <button type="submit">Subir Imagen</button>
+</form>
