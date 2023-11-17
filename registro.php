@@ -1,7 +1,7 @@
 <?php
 require "DataBase/conexion.php";
 
-// Obtener la información del formulario
+// gte the data of form
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["imagen"])) {
     $name = $_POST["name"];
     $precio = $_POST["precio"];
@@ -10,31 +10,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["imagen"])) {
     $tamanoImagen = $_FILES["imagen"]["size"];
     $tempImagen = $_FILES["imagen"]["tmp_name"];
 
-    // Verificar la conexión
+    // verify the connection
     if ($conn->connect_error) {
         die("Error de conexión: " . $conn->connect_error);
     }
 
-    // Preparar la consulta SQL para insertar el producto
+    // prepare the SQL statement to insert the data
     $stmt = $conn->prepare("INSERT INTO productos (name, precio) VALUES (?, ?)");
 
-    // Vincular los datos a los parámetros de la consulta
+    // link the data to the statement
     $stmt->bind_param("si", $name, $precio);
 
-    // Ejecutar la consulta para insertar el producto
+    // execute the statement of product
     $stmt->execute();
 
-    // Preparar la consulta SQL para insertar la imagen
+    // prepare the query to images table
     $query = "INSERT INTO imagenes (nombre, tipo, tamano, imagen) VALUES (?, ?, ?, ?)";
     $statement = $conn->prepare($query);
 
-    // Vincular los datos a los parámetros de la consulta
+    // link the data to variables
     $statement->bind_param("ssis", $nombreImagen, $tipoImagen, $tamanoImagen, $tempImagen);
 
-    // Ejecutar la consulta para insertar la imagen
+    // execute the query to insert the image
     $statement->execute();
 
-    // Cerrar la conexión y el statement
+    // close the connection and statement
     $statement->close();
     $stmt->close();
     $conn->close();
