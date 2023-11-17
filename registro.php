@@ -1,36 +1,46 @@
 <?php
 require "DataBase/conexion.php";
 
-// Obtener los datos del formulario
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Obtener la información del formulario
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["imagen"])) {
     $name = $_POST["name"];
-    $tmp_image = $_FILES["image"]["tmp_name"];
-    $precio = $_POST["precio"]; // cambiar el nombre de la variable
-
-    // Leer la imagen en bytes
-    $data_image = file_get_contents($tmp_image);
+    $precio = $_POST["precio"];
+    $nombreImagen = $_FILES["imagen"]["name"];
+    $tipoImagen = $_FILES["imagen"]["type"];
+    $tamanoImagen = $_FILES["imagen"]["size"];
+    $tempImagen = $_FILES["imagen"]["tmp_name"];
 
     // Verificar la conexión
     if ($conn->connect_error) {
         die("Error de conexión: " . $conn->connect_error);
     }
 
-    // Preparar la sentencia SQL
-    $stmt = $conn->prepare("INSERT INTO productos (name, image, precio) VALUES (?, ?, ?)");
+    // Preparar la consulta SQL para insertar el producto
+    $stmt = $conn->prepare("INSERT INTO productos (name, precio) VALUES (?, ?)");
 
-    // Vincular los parámetros a la sentencia SQL
-    $stmt->bind_param("sbi", $name, $data_image, $precio); // cambiar la variable $price por $precio
+    // Vincular los datos a los parámetros de la consulta
+    $stmt->bind_param("si", $name, $precio);
 
-    // Ejecutar la sentencia
-    if ($stmt->execute()) {
-        echo "Imagen subida correctamente";
-    } else {
-        echo "Error al subir la imagen: " . $stmt->error;
-    }
+    // Ejecutar la consulta para insertar el producto
+    $stmt->execute();
 
-    // Cerrar la conexión
+    // Preparar la consulta SQL para insertar la imagen
+    $query = "INSERT INTO imagenes (nombre, tipo, tamano, imagen) VALUES (?, ?, ?, ?)";
+    $statement = $conn->prepare($query);
+
+    // Vincular los datos a los parámetros de la consulta
+    $statement->bind_param("ssis", $nombreImagen, $tipoImagen, $tamanoImagen, $tempImagen);
+
+    // Ejecutar la consulta para insertar la imagen
+    $statement->execute();
+
+    // Cerrar la conexión y el statement
+    $statement->close();
     $stmt->close();
     $conn->close();
+
+    // Mostrar mensaje de éxito
+    echo "Registro exitoso";
 }
 ?>
 <!DOCTYPE html>
@@ -44,12 +54,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <form align="center" action="registro.php" method="POST">
+    <form align="center" action="registro.php" method="POST" enctype="multipart/form-data">
         <label for="nombre">Nombre del producto:</label>
         <input type="text" id="name" name="name"><br><br>
 
         <label for="imagen">Imagen:</label>
-        <input type="file" id="image" name="image"><br><br>
+        <input type="file" id="imagen" name="imagen"><br><br>
 
         <label for="precio">Precio:</label>
         <input type="number" id="precio" name="precio"><br><br>
