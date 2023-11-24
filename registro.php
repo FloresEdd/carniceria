@@ -1,7 +1,7 @@
 <?php
 require "DataBase/conexion.php";
 
-// gte the data of form
+// get data form
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["imagen"])) {
     $name = $_POST["name"];
     $precio = $_POST["precio"];
@@ -15,31 +15,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["imagen"])) {
         die("Error de conexión: " . $conn->connect_error);
     }
 
-    // prepare the SQL statement to insert the data
+    // prepare the query
     $stmt = $conn->prepare("INSERT INTO productos (name, precio) VALUES (?, ?)");
 
-    // link the data to the statement
+    // vincule data to declaration of variables
     $stmt->bind_param("si", $name, $precio);
 
-    // execute the statement of product
+    // execute the query
     $stmt->execute();
 
-    // prepare the query to images table
+    // read the image
+    $imagenContenido = file_get_contents($tempImagen);
+
+    // pepare the image query
     $query = "INSERT INTO imagenes (nombre, tipo, tamano, imagen) VALUES (?, ?, ?, ?)";
     $statement = $conn->prepare($query);
 
-    // link the data to variables
-    $statement->bind_param("ssis", $nombreImagen, $tipoImagen, $tamanoImagen, $tempImagen);
+    // vincule data to declaration of variables
+    $statement->bind_param("ssis", $nombreImagen, $tipoImagen, $tamanoImagen, $imagenContenido);
 
-    // execute the query to insert the image
+    // execute the query
     $statement->execute();
 
-    // close the connection and statement
+    // close the statement and connection
     $statement->close();
     $stmt->close();
     $conn->close();
 
-    // Mostrar mensaje de éxito
+    // show successfull message
     echo "Registro exitoso";
 }
 ?>
