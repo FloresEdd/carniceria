@@ -1,21 +1,21 @@
 <?php
 require "DataBase/conexion.php";
 
-// Verificar la conexión
+// verify the connection
 if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
 }
 
-// Preparar la consulta SQL para seleccionar los datos
+// prepare query
 $sql = "SELECT name, precio, imagen FROM productos";
 $result = $conn->query($sql);
 
-// Verificar si hay resultados
+//verify if there have results
 if ($result->num_rows > 0) {
     echo "<table>";
     echo "<tr><th>Nombre</th><th>Precio</th><th>Imagen</th></tr>";
 
-    // Recorrer los resultados y mostrar los datos en una tabla
+    // show results on a board
     while ($row = $result->fetch_assoc()) {
         $nombre = $row["name"];
         $precio = $row["precio"];
@@ -33,7 +33,7 @@ if ($result->num_rows > 0) {
     echo "No se encontraron resultados";
 }
 
-// Cerrar la conexión
+// close connection
 $conn->close();
 ?>
 <!DOCTYPE html>

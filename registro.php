@@ -1,48 +1,40 @@
 <?php
 require "DataBase/conexion.php";
 
-// get data form
+//get data form
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["imagen"])) {
     $name = $_POST["name"];
     $precio = $_POST["precio"];
-    $nombreImagen = $_FILES["imagen"]["name"];
-    $tipoImagen = $_FILES["imagen"]["type"];
-    $tamanoImagen = $_FILES["imagen"]["size"];
     $tempImagen = $_FILES["imagen"]["tmp_name"];
 
-    // verify the connection
+    //verify connection
     if ($conn->connect_error) {
         die("Error de conexión: " . $conn->connect_error);
     }
 
-    // prepare the query
-    $stmt = $conn->prepare("INSERT INTO productos (name, precio) VALUES (?, ?)");
+    //verify if the image is a png
+    $tipoImagen = exif_imagetype($tempImagen);
+    if ($tipoImagen !== IMAGETYPE_PNG) {
+        die("Solo se permiten imágenes PNG");
+    }
 
-    // vincule data to declaration of variables
-    $stmt->bind_param("si", $name, $precio);
-
-    // execute the query
-    $stmt->execute();
-
-    // read the image
+    // read image
     $imagenContenido = file_get_contents($tempImagen);
 
-    // pepare the image query
-    $query = "INSERT INTO imagenes (nombre, tipo, tamano, imagen) VALUES (?, ?, ?, ?)";
-    $statement = $conn->prepare($query);
+    // prepare query
+    $stmt = $conn->prepare("INSERT INTO productos (name, precio, imagen) VALUES (?, ?, ?)");
 
-    // vincule data to declaration of variables
-    $statement->bind_param("ssis", $nombreImagen, $tipoImagen, $tamanoImagen, $imagenContenido);
+    // link parameters
+    $stmt->bind_param("sis", $name, $precio, $imagenContenido);
 
-    // execute the query
-    $statement->execute();
+    // execute query
+    $stmt->execute();
 
-    // close the statement and connection
-    $statement->close();
+    // close statement and connection
     $stmt->close();
     $conn->close();
 
-    // show successfull message
+    // exit message
     echo "Registro exitoso";
 }
 ?>
@@ -57,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["imagen"])) {
 </head>
 
 <body>
+    <h2 align="center">SOLO SE PERMITEN IMAGENES .PNG</h2>
     <form align="center" action="registro.php" method="POST" enctype="multipart/form-data">
         <label for="nombre">Nombre del producto:</label>
         <input type="text" id="name" name="name"><br><br>
