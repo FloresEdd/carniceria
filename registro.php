@@ -6,6 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["imagen"])) {
     $name = $_POST["name"];
     $precio = $_POST["precio"];
     $tempImagen = $_FILES["imagen"]["tmp_name"];
+    $id = $_POST ["id"];
 
     //verify connection
     if ($conn->connect_error) {
@@ -22,10 +23,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["imagen"])) {
     $imagenContenido = file_get_contents($tempImagen);
 
     // prepare query
-    $stmt = $conn->prepare("INSERT INTO productos (name, precio, imagen) VALUES (?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO productos (name, precio, imagen, id) VALUES (?, ?, ?, ?)");
 
     // link parameters
-    $stmt->bind_param("sis", $name, $precio, $imagenContenido);
+    $stmt->bind_param("siss", $name, $precio, $imagenContenido, $id);
 
     // execute query
     $stmt->execute();
@@ -59,6 +60,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["imagen"])) {
 
         <label for="precio">Precio:</label>
         <input type="number" id="precio" name="precio"><br><br>
+
+        <label for="id">ID:</label>
+        <input type="number" id="id" name="id"><br><br>
 
         <input type="submit" value="Registrar">
     </form>
