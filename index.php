@@ -7,11 +7,12 @@ if ($conn->connect_error) {
 }
 
 // prepare query
-$sql = "SELECT name, precio, imagen FROM productos";
+$sql = "SELECT name, precio, imagen, id FROM productos";
 $result = $conn->query($sql);
 
 //verify if there have results
 if ($result->num_rows > 0) {
+    echo "<form action='procesar.php' method='POST'>";
     echo "<table>";
     echo "<tr><th>Nombre</th><th>Precio</th><th>Imagen</th></tr>";
 
@@ -24,11 +25,13 @@ if ($result->num_rows > 0) {
         echo "<tr>";
         echo "<td>$nombre</td>";
         echo "<td>$precio</td>";
-        echo "<td><img widht='100px' height='100px'src='data:image/PNG;base64," . base64_encode($imagen) . "' alt=''></td>";
+        echo "<td><input type='checkbox' name='productos' value='" . $row["id"] . "'><img width='100px' height='100px' src='data:image/PNG;base64," . base64_encode($imagen) . "' alt=''></td>";
         echo "</tr>";
     }
 
     echo "</table>";
+    echo "<input type='submit' value='Comprar'>";
+    echo "</form>";
 } else {
     echo "No se encontraron resultados";
 }
@@ -40,8 +43,9 @@ $conn->close();
 <html lang="es">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <head>
-<title>La principal</title>
+    <title>La principal</title>
 
 </head>
 
