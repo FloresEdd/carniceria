@@ -21,11 +21,11 @@ if ($result->num_rows > 0) {
         $nombre = $row["name"];
         $precio = $row["precio"];
         $imagen = $row["imagen"];
-
+        
         echo "<tr>";
         echo "<td>$nombre</td>";
         echo "<td>$precio</td>";
-        echo "<td><input type='checkbox' name='productos' value='" . $row["id"] . "'><img width='100px' height='100px' src='data:image/PNG;base64," . base64_encode($imagen) . "' alt=''></td>";
+        echo "<td><input type='checkbox' name='productos[]' value='" . $row["id"] . "'><img width='100px' height='100px' src='data:image/PNG;base64," . base64_encode($imagen) . "' alt=''></td>";
         echo "</tr>";
     }
 
