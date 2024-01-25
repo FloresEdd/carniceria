@@ -63,7 +63,7 @@
                     echo "<span class='minus'>-</span>";
                     echo "<div class='product-image'>";
                     echo "<img src='data:image/PNG;base64," . base64_encode($imagen) . "' alt='Imagen'>";
-                    echo "<span class='num'>01</span>";
+                    echo "<span id= 'num' class='num'>01</span>";
                     echo "<span class='plus'>+</span>";
                     echo "</div>";
                     echo "</div>";
@@ -80,7 +80,44 @@
     <div class="links">
         <a href="index.php">¿Quieres seleccionar más productos?</a>
     </div>
+    <form action="pago.php" method="POST">
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre">
+        <select id="metodoPago" onchange="mostrarOcultarInput()">
+            <option value="" disable selected>Selecciona una forma de pago</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Tarjeta">Tarjeta de credito o debito</option>
+        </select>
+
+        <div id="InputEfectivo" style="display: none;">
+            <input type="number" id="montoEfectivo" name="montoEfectivo" placeholder="¿Con cuánto vas a pagar?">
+        </div>
+
+        <div id="InputTarjeta" style="display: none;">
+        <h4>Ingrese los datos de su tarjeta:</h4><br>
+        <input type="number" id="numerosTarjeta" name="numerosTarjeta" placeholder="Numeros de la tarjeta"><br>
+        <input type="number"  id="vigencia" name="vigencia" placeholder="Vigencia"><br>
+        <input type="number" id="cvv" name="cvv" placeholder="CVV">
+        </div>
+    </form>
+    <script>
+  function mostrarOcultarInput() {
+    var metodoPago = document.getElementById("metodoPago").value;
+    var InputEfectivo = document.getElementById("InputEfectivo");
+    var InputTarjeta = document.getElementById("InputTarjeta");
+
+    if (metodoPago === "Efectivo") {
+      InputEfectivo.style.display = "block";
+      InputTarjeta.style.display = "none";
+    } else if (metodoPago === "Tarjeta") {
+      InputEfectivo.style.display = "none";
+      InputTarjeta.style.display = "block";
+    } else {
+      InputEfectivo.style.display = "none";
+      InputTarjeta.style.display = "none";
+    }
+  }
+</script>
 </body>
-<script src="Js/script.js"></script>
+<script src=" Js/script.js"></script>
 
 </html>

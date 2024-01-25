@@ -1,5 +1,6 @@
 <?php
 require "DataBase/conexion.php";
+include "layouts/navbar.php";
 
 // verify the connection
 if ($conn->connect_error) {
@@ -50,5 +51,4 @@ $conn->close();
 </head>
 
 <body>
-
 </body>

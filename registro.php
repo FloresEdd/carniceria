@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["imagen"])) {
 
 <body>
     <h2 align="center">SOLO SE PERMITEN IMAGENES .PNG</h2>
-    <form align="center" action="registro.php" method="POST" enctype="multipart/form-data">
+    <form align="center" action="procesar.php" method="POST" enctype="multipart/form-data">
         <label for="nombre">Nombre del producto:</label>
         <input type="text" id="name" name="name"><br><br>
 
