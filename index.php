@@ -17,6 +17,7 @@ if ($result->num_rows > 0) {
     echo "<table>";
     echo "<tr><th>Nombre</th><th>Precio</th><th>Imagen</th></tr>";
 
+    
     // show results on a board
     while ($row = $result->fetch_assoc()) {
         $nombre = $row["name"];
@@ -24,8 +25,12 @@ if ($result->num_rows > 0) {
         $imagen = $row["imagen"];
         
         echo "<tr>";
+        echo "<span class='nombre'>";
         echo "<td>$nombre</td>";
+        echo "</span>";
+        echo "<span class='precio'>";
         echo "<td>$precio</td>";
+        echo "</span>";
         echo "<td><input type='checkbox' name='productos[]' value='" . $row["id"] . "'><img width='100px' height='100px' src='data:image/PNG;base64," . base64_encode($imagen) . "' alt=''></td>";
         echo "</tr>";
     }
